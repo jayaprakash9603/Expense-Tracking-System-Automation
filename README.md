@@ -36,6 +36,10 @@ The framework is built using **Selenium, Java, and TestNG**, and follows industr
 expense-tracking-automation/
 │
 ├── src/main/java/com/jaya/
+│   ├── api/              # All the API calls needed for it
+│   ├── config/           # Framework constants
+│   ├── base/             # All the common methods
+│   ├── builders/         # All the builder methods for it
 │   ├── factory/          # DriverFactory, BrowserOptionsFactory, Managers
 │   ├── pages/            # Page Object classes (LoginPage, ExpensePage, DashboardPage, etc.)
 │   ├── utils/            # Utilities (AlertUtils, FrameUtils, ScreenshotUtils, etc.)
@@ -106,7 +110,6 @@ public void testAddExpense() {
 
 ## 👨‍💻 Author
 **Jaya Prakash J**  
-📧 [jjayaprakash9603@gmail.com]  
-🔗 [Your LinkedIn/GitHub Profile]
+📧 [jjayaprakash9603@gmail.com]
 
 ---
