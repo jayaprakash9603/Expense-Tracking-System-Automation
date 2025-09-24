@@ -1,15 +1,17 @@
 package com.jaya.base;
 
-import com.jaya.config.FrameworkConfig;
+
 import com.jaya.exceptions.*;
-import com.jaya.factory.DriverFactory;
-import com.jaya.utils.UtilityManager;
-import com.jaya.utils.WaitUtils;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.jaya.utils.UtilityManager;
+import com.jaya.config.FrameworkConfig;
+import com.jaya.factory.DriverFactory;
+import com.jaya.utils.WaitUtils;
 
 import java.util.List;
 import java.util.function.Supplier;
