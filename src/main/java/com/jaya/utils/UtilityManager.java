@@ -1,8 +1,7 @@
 package com.jaya.utils;
 
-
-import com.jaya.utils.*;
 import org.openqa.selenium.WebDriver;
+
 
 public class UtilityManager {
     private final WebDriver driver;
