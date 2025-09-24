@@ -2,15 +2,21 @@ package com.jaya.pages.login;
 
 import com.jaya.base.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 
 public class LoginPage extends BasePage {
 
+
+
     // Page elements
-    private final By usernameField = By.id("username");
-    private final By passwordField = By.id("password");
-    private final By loginButton = By.xpath("//button[@type='submit']");
+    private final By usernameField = By.xpath("//input[@name='email']");
+    private final By passwordField = By.xpath("//input[@name='password']");
+    private final By loginButton = By.xpath("//button[text()='Login']");
     private final By errorMessage = By.className("error-message");
     private final By forgotPasswordLink = By.linkText("Forgot Password?");
+    private final By invalidLoginTextField=By.xpath("//div[contains(text(),'User not found with email')]");
+    private final By homeTextField=By.xpath("//div[contains(text(),'Home')]");
 
     // Page actions
     public void enterUsername(String username) {
@@ -29,6 +35,23 @@ public class LoginPage extends BasePage {
         enterUsername(username);
         enterPassword(password);
         clickLoginButton();
+        verifyHomePage();
+    }
+
+    public void verifyHomePage()
+    {
+        Assert.assertEquals(findElement(homeTextField).getText(),"Home");
+    }
+    public void invalidLogin(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        clickLoginButton();
+        verifyInvalidLoginText(invalidLoginTextField,username);
+    }
+
+    public void verifyInvalidLoginText(By invalidLoginTextField,String username)
+    {
+        Assert.assertEquals(findElement(invalidLoginTextField).getText(),"User not found with email: "+username);
     }
 
     public String getErrorMessage() {

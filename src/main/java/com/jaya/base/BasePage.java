@@ -3,18 +3,16 @@ package com.jaya.base;
 
 import com.jaya.exceptions.*;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.jaya.utils.ActionUtils;
+import com.jaya.utils.UtilityManager;
+import org.openqa.selenium.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.jaya.utils.UtilityManager;
 import com.jaya.config.FrameworkConfig;
 import com.jaya.factory.DriverFactory;
 import com.jaya.utils.WaitUtils;
-
 import java.util.List;
-import java.util.function.Supplier;
+
 
 public abstract class BasePage {
     protected final WebDriver driver;
@@ -50,7 +48,18 @@ public abstract class BasePage {
     protected void sendKeys(By locator, String text) {
         executeWithRetry(() -> {
             WebElement element = WaitUtils.waitForElementVisible(driver, locator);
-            element.clear();
+
+            try {
+                element.clear();
+                if (!element.getAttribute("value").isEmpty()) {
+                    // fallback if clear() didn’t work
+                    element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+                }
+            } catch (Exception e) {
+                // fallback to JS clear
+                ((JavascriptExecutor) driver).executeScript("arguments[0].value='';", element);
+            }
+
             element.sendKeys(text);
             logger.info("Entered text '{}' into element: {}", text, locator);
             return null;
@@ -108,21 +117,21 @@ public abstract class BasePage {
     }
 
     protected boolean isElementEnabled(By locator) {
-        return executeWithRetry(() -> {
+        return Boolean.TRUE.equals(executeWithRetry(() -> {
             WebElement element = WaitUtils.waitForElementVisible(driver, locator);
             boolean enabled = element.isEnabled();
             logger.info("Element {} is enabled: {}", locator, enabled);
             return enabled;
-        }, "isElementEnabled", locator);
+        }, "isElementEnabled", locator));
     }
 
     protected boolean isElementSelected(By locator) {
-        return executeWithRetry(() -> {
+        return Boolean.TRUE.equals(executeWithRetry(() -> {
             WebElement element = WaitUtils.waitForElementVisible(driver, locator);
             boolean selected = element.isSelected();
             logger.info("Element {} is selected: {}", locator, selected);
             return selected;
-        }, "isElementSelected", locator);
+        }, "isElementSelected", locator));
     }
 
     // Advanced interaction methods
