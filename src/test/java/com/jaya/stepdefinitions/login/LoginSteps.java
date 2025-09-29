@@ -17,7 +17,7 @@ public class LoginSteps  {
     @Given("the user is on the Login page")
     public void the_user_is_on_the_login_page() {
         driver=DriverFactory.getInstance().getDriver();
-        driver.get("https://jjayaprakash.netlify.app/");
+        driver.get("http://localhost:3000/");
         loginPage = new LoginPage();
     }
 
@@ -42,12 +42,19 @@ public class LoginSteps  {
     }
 
     @Then("click on logout and confirm")
-    public void click_on_logou_and_confirm() {
-        loginPage.verifyHomePage();
+    public void click_on_logout_and_confirm() {
+        loginPage.clickLogoutButton();
+        loginPage.confirmLogout();
     }
 
-//    @Then("an error message should be displayed")
-//    public void an_error_message_should_be_displayed(String expectedMessage) {
-//        loginPage.verifyInvalidLoginText();
-//    }
+    @Then("{string} error message should be displayed")
+    public void errorMessageShouldBeDisplayed(String errorMessage) {
+        loginPage.assertInvalidLoginMessage(errorMessage);
+    }
+
+    // Optional: step to assert fragment only (useful if full text varies slightly)
+    @Then("an error message containing {string} should be displayed")
+    public void errorMessageContainingShouldBeDisplayed(String fragment) {
+        loginPage.assertLoginMessageContains(fragment);
+    }
 }
