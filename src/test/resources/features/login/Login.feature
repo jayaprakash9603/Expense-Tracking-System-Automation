@@ -8,6 +8,7 @@ Feature: Login functionality
     And the user enters password "123456"
     And clicks on the Login button
     Then the user should be redirected to the Home page
+    Then click on logout and confirm
 
   Scenario: Unsuccessful login with invalid credentials
     When the user enters username "invalid@gmail.com"

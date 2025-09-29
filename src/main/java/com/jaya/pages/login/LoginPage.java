@@ -12,7 +12,9 @@ public class LoginPage extends BasePage {
     // Page elements
     private final By usernameField = By.xpath("//input[@name='email']");
     private final By passwordField = By.xpath("//input[@name='password']");
-    private final By loginButton = By.xpath("//button[text()='Login']");
+    private final By loginButton = By.xpath("//div[contains(text(),'Logout')]");
+    private final By confirmButton=By.xpath("//button[contains(text(),'Yes')]");
+    private final By logoutButton = By.xpath("//button[text()='Login']");
     private final By errorMessage = By.className("error-message");
     private final By forgotPasswordLink = By.linkText("Forgot Password?");
     private final By invalidLoginTextField=By.xpath("//div[contains(text(),'User not found with email')]");
@@ -31,11 +33,31 @@ public class LoginPage extends BasePage {
         click(loginButton);
     }
 
+    public void clickLogoutButton() {
+        click(logoutButton);
+    }
+
+    public void confirmLogout() {
+        click(confirmButton);
+    }
+
     public void login(String username, String password) {
         enterUsername(username);
         enterPassword(password);
         clickLoginButton();
         verifyHomePage();
+    }
+
+    public void logout(String username, String password) {
+
+        clickLogoutButton();
+        confirmLogout();
+        verifyLoginPage();
+    }
+
+    public void verifyLoginPage()
+    {
+        Assert.assertEquals(findElement(loginButton).getText(),"Login");
     }
 
     public void verifyHomePage()
