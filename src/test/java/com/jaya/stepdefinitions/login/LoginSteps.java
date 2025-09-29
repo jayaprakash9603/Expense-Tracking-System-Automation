@@ -12,9 +12,11 @@ public class LoginSteps  {
     private WebDriver driver;
     private LoginPage loginPage;
 
+
+
     @Given("the user is on the Login page")
     public void the_user_is_on_the_login_page() {
-        driver= DriverFactory.getInstance().getDriver();
+        driver=DriverFactory.getInstance().getDriver();
         driver.get("https://jjayaprakash.netlify.app/");
         loginPage = new LoginPage();
     }
@@ -35,7 +37,12 @@ public class LoginSteps  {
     }
 
     @Then("the user should be redirected to the Home page")
-    public void the_user_should_be_redirected_to_the_home_page(String exceptedMessage) {
+    public void the_user_should_be_redirected_to_the_home_page() {
+        loginPage.verifyHomePage();
+    }
+
+    @Then("click on logout and confirm")
+    public void click_on_logou_and_confirm() {
         loginPage.verifyHomePage();
     }
 
