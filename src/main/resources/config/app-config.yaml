@@ -1,0 +1,4 @@
+app:
+  baseUrl: "http://localhost:3000"  # Change to your AUT base URL
+  loginPath: "/login"
+  registerPath: "/register"

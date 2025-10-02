@@ -26,14 +26,14 @@ Feature: Login functionality
     When the user enters username "unknown.user@example.com"
     And the user enters password "SomePass123"
     And clicks on the Login button
-  Then "User not found" error message should be displayed
+  Then "Invalid Username or Password" error message should be displayed
 
   @negative
   Scenario: Unsuccessful login with both fields empty
     When the user enters username ""
     And the user enters password ""
     And clicks on the Login button
-  Then "Email is required" error message should be displayed
+  Then "Enter all the mandatory fields" error message should be displayed
 
   @negative
   Scenario: Unsuccessful login with empty username
@@ -60,9 +60,9 @@ Feature: Login functionality
 
     Examples:
       | username                | password | expectedMessage             |
-      | invalid@example.com     | 123456   | User not found|
+      | invalid@example.com     | 123456   | Invalid Username or Password|
       | jjayaprakash2002@gmail.com  | badpass  | Invalid Username or Password|
-      | invalid@example.com     | badpass  | User not found|
+      | invalid@example.com     | badpass  | Invalid Username or Password|
 
   @regression
   Scenario: Logout after successful login

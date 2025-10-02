@@ -16,9 +16,9 @@ public class LoginSteps  {
 
     @Given("the user is on the Login page")
     public void the_user_is_on_the_login_page() {
-        driver=DriverFactory.getInstance().getDriver();
-        driver.get("http://localhost:3000/");
+        driver = DriverFactory.getInstance().getDriver();
         loginPage = new LoginPage();
+        loginPage.load();
     }
 
     @When("the user enters username {string}")
