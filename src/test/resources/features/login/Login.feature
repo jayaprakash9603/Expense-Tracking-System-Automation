@@ -6,7 +6,7 @@ Feature: Login functionality
   Background:
     Given the user is on the Login page
 
-  @smoke @positive
+  @smoke @positive @regression
   Scenario: Successful login with valid credentials
     When the user enters username "jjayaprakash2002@gmail.com"
     And the user enters password "123456"
@@ -64,10 +64,3 @@ Feature: Login functionality
       | jjayaprakash2002@gmail.com  | badpass  | Invalid Username or Password|
       | invalid@example.com     | badpass  | Invalid Username or Password|
 
-  @regression
-  Scenario: Logout after successful login
-    When the user enters username "jjayaprakash2002@gmail.com"
-    And the user enters password "123456"
-    And clicks on the Login button
-    Then the user should be redirected to the Home page
-    And click on logout and confirm

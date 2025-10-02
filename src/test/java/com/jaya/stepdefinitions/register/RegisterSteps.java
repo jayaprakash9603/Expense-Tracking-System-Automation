@@ -80,7 +80,7 @@ public class RegisterSteps {
     public void i_register_without_gender(String first, String last, String email, String password) {
         setFirstName(first);
         setLastName(last);
-    setEmail(email);
+        setEmail(email);
         setPassword(password);
         clickRegisterButton();
     }
