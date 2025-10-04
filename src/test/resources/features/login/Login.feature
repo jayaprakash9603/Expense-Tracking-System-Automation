@@ -1,3 +1,4 @@
+@login @feature
 Feature: Login functionality
   As a registered or unregistered user
   I want to authenticate with the application
