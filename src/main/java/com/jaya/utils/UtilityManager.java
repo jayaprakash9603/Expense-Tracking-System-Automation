@@ -18,30 +18,37 @@ public class UtilityManager {
 
     public UtilityManager(WebDriver driver) {
         this.driver = driver;
-        initializeUtils();
+        if (driver != null) {
+            initializeUtils();
+        }
     }
 
     private void initializeUtils() {
-        this.actionUtils = new ActionUtils(driver);
-        this.alertUtils = new AlertUtils(driver);
-        this.fileUtils = new FileUtils();
-        this.frameUtils = new FrameUtils(driver);
-        this.jsUtils = new JsUtils(driver);
-        this.screenshotUtils = new ScreenshotUtils(driver);
-        this.selectUtils = new SelectUtils();
-        this.tableUtils = new TableUtils(driver);
-        this.waitUtils = new WaitUtils(driver);
-        this.windowUtils = new WindowUtils(driver);
+        if (driver == null) {
+            return; // defer until driver available
+        }
+        if (this.actionUtils == null) {
+            this.actionUtils = new ActionUtils(driver);
+            this.alertUtils = new AlertUtils(driver);
+            this.fileUtils = new FileUtils();
+            this.frameUtils = new FrameUtils(driver);
+            this.jsUtils = new JsUtils(driver);
+            this.screenshotUtils = new ScreenshotUtils(driver);
+            this.selectUtils = new SelectUtils();
+            this.tableUtils = new TableUtils(driver);
+            this.waitUtils = new WaitUtils(driver);
+            this.windowUtils = new WindowUtils(driver);
+        }
     }
 
-    public ActionUtils getActionUtils() { return actionUtils; }
-    public AlertUtils getAlertUtils() { return alertUtils; }
-    public FileUtils getFileUtils() { return fileUtils; }
-    public FrameUtils getFrameUtils() { return frameUtils; }
-    public JsUtils getJsUtils() { return jsUtils; }
-    public ScreenshotUtils getScreenshotUtils() { return screenshotUtils; }
-    public SelectUtils getSelectUtils() { return selectUtils; }
-    public TableUtils getTableUtils() { return tableUtils; }
-    public WaitUtils getWaitUtils() { return waitUtils; }
-    public WindowUtils getWindowUtils() { return windowUtils; }
+    public ActionUtils getActionUtils() { if (actionUtils == null) initializeUtils(); return actionUtils; }
+    public AlertUtils getAlertUtils() { if (alertUtils == null) initializeUtils(); return alertUtils; }
+    public FileUtils getFileUtils() { if (fileUtils == null) initializeUtils(); return fileUtils; }
+    public FrameUtils getFrameUtils() { if (frameUtils == null) initializeUtils(); return frameUtils; }
+    public JsUtils getJsUtils() { if (jsUtils == null) initializeUtils(); return jsUtils; }
+    public ScreenshotUtils getScreenshotUtils() { if (screenshotUtils == null) initializeUtils(); return screenshotUtils; }
+    public SelectUtils getSelectUtils() { if (selectUtils == null) initializeUtils(); return selectUtils; }
+    public TableUtils getTableUtils() { if (tableUtils == null) initializeUtils(); return tableUtils; }
+    public WaitUtils getWaitUtils() { if (waitUtils == null) initializeUtils(); return waitUtils; }
+    public WindowUtils getWindowUtils() { if (windowUtils == null) initializeUtils(); return windowUtils; }
 }

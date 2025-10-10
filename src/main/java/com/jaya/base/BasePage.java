@@ -21,8 +21,14 @@ public abstract class BasePage {
     private static final Logger logger = LoggerFactory.getLogger(BasePage.class);
 
     public BasePage() {
-        this.driver = DriverFactory.getInstance().getDriver();
-        this.utils = new UtilityManager(driver);
+        WebDriver existing = DriverFactory.getInstance().getDriver();
+        if (existing == null) {
+            // Fallback initialization if hooks didn't run yet
+            DriverFactory.getInstance().initDriver();
+            existing = DriverFactory.getInstance().getDriver();
+        }
+        this.driver = existing;
+        this.utils = new UtilityManager(this.driver);
 
         // Set up exception handling chain
         ExceptionHandler staleHandler = new StaleElementHandler();
@@ -102,7 +108,7 @@ public abstract class BasePage {
         }, "getAttribute", locator);
     }
 
-    protected boolean isElementDisplayed(By locator) {
+    public boolean isElementDisplayed(By locator) {
         try {
             return executeWithRetry(() -> {
                 WebElement element = WaitUtils.waitForElementVisible(driver, locator);

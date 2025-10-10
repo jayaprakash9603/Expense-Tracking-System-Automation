@@ -1,0 +1,7 @@
+{
+  "firstName": "{{firstName}}",
+  "lastName": "{{lastName}}",
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "gender": "{{gender}}"
+}

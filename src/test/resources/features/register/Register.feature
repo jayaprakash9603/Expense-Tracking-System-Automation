@@ -155,3 +155,94 @@ Feature: User Registration
     | 3   | JJJJJJJJJJJJJJJJJJJJ   | success                 |
     | 4   | JJJJJJJJJJJJJJJJJJJJJJ | First Name too long     |
 
+  # ---------------- Boundary - Last Name Length ----------------
+  @boundary @outline
+  Scenario Outline: Boundary test for last name length
+    When I attempt to register with first name "Doe", last name "<value>", email "lastname<idx>@test.com", password "Str0ng@123"
+    Then I should see validation outcome "<outcome>"
+  Examples:
+    | idx | value                  | outcome                |
+    | 1   | D                      | success                |
+    | 2   |                        | Last Name is required  |
+    | 3   | DDDDDDDDDDDDDDDDDDDD   | success                |
+    | 4   | DDDDDDDDDDDDDDDDDDDDDD | Last Name too long     |
+
+  # ---------------- Boundary - Password Length Upper ----------------
+  @boundary @outline
+  Scenario Outline: Boundary test for password max length
+    When I attempt to register with first name "John", last name "Doe", email "pwlen<idx>@test.com", password "<password>"
+    Then I should see validation outcome "<outcome>"
+  Examples:
+    | idx | password                                   | outcome                   |
+    | 1   | Str0ng@1                                   | success                   |
+    | 2   | Str0ng@123456789012345                     | success                   |
+    | 3   | Str0ng@1234567890123456                    | success        |
+
+  # ---------------- Case Insensitive Email Uniqueness ----------------
+  @regression @negative
+  Scenario: Duplicate email differing only by case
+    Given an account already exists with email "JaYa@gmail.com"
+    When I attempt to register with first name "Case", last name "User", email "JaYa@gmail.com", password "prakash@2002"
+    Then I should see validation error "This email is already taken"
+
+  # ---------------- Leading/Trailing Whitespace Trimming ----------------
+  @usability @positive
+  Scenario: Inputs with surrounding spaces are trimmed
+    When I attempt to register with first name "  John  ", last name "  Doe ", email "  trim@test.com  ", password "  Str0ng@123  "
+    Then I should see a success message "Registration successful"
+    And The stored user name should be "John Doe"
+
+  # ---------------- Duplicate Submission Prevention ----------------
+#  @resilience @negative
+#  Scenario: Rapid multiple form submissions are throttled
+#    When I attempt to submit the registration form 3 times within 1 second with first name "Load", last name "Test", email "throttle@test.com", password "Str0ng@123"
+#    Then I should see validation error "Too many attempts, please wait"
+
+
+
+  # ---------------- Disallowed Characters in Names ----------------
+  @negative @outline
+  Scenario Outline: Reject names with disallowed characters
+    When I attempt to register with first name "<bad>", last name "User", email "badname<idx>@test.com", password "Str0ng@123"
+    Then I should see validation error "Invalid characters"
+  Examples:
+    | idx | bad                |
+    | 1   | John<script>       |
+    | 2   | Eve@              |
+    | 3   | Bob#               |
+    | 4   | Jane<>             |
+
+
+
+
+
+
+  # ---------------- Field Focus Order / Accessibility ----------------
+  @accessibility
+  Scenario: Tabbing through fields follows logical order
+    When I navigate the form using the Tab key
+    Then Focus order should be First Name -> Last Name -> Email -> Password -> Register Button -> Login link
+
+  # ---------------- Screen Reader / ARIA Validation ----------------
+  @accessibility
+  Scenario: Validation errors announced via ARIA
+    When I submit an empty registration form
+    Then Each field error should have aria-live polite
+
+  # ---------------- Password Not Logged (Audit) ----------------
+  @security
+  Scenario: Password value not leaked to client logs
+    When I open the browser console while registering with first name "Log", last name "Audit", email "audit@test.com", password "Str0ng@123"
+    Then I should not see the password value in console logs
+
+
+
+
+
+
+  # ---------------- Export / Report Injection Safety ----------------
+  @security @negative
+  Scenario: Formula injection attempt in first name
+    When I attempt to register with first name "=CMD|' /C calc'!A0", last name "Formula", email "formula@test.com", password "Str0ng@123"
+    Then I should see validation error "Invalid characters"
+

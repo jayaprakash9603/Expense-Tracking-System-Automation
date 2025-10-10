@@ -15,14 +15,14 @@ public class Hooks {
 
     @BeforeAll
     public static void setUp() {
-
-        DriverFactory.getInstance().initDriver();
-        driver=DriverFactory.getInstance().getDriver();
-        System.out.println("driver Intilized"+driver);
+        if (DriverFactory.getInstance().getDriver() == null) {
+            DriverFactory.getInstance().initDriver();
+        }
+        driver = DriverFactory.getInstance().getDriver();
     }
 
     @AfterAll
-    public static void tearDown() {
+    public static  void tearDown() {
         DriverFactory.getInstance().quitDriver();
     }
 }
