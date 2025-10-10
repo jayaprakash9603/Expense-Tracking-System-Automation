@@ -14,17 +14,14 @@ import java.time.format.DateTimeFormatter;
 /**
  * Step definitions for Register.feature.
  * NOTE: A dedicated RegisterPage object does not yet exist; basic interactions are placeholders.
- * TODO: Implement RegisterPage with proper locators & actions similar to LoginPage, then refactor below.
  */
 public class RegisterSteps {
 
     private WebDriver driver;
     private RegisterPage registerPage;
-    // If set, this email should be used raw (no uniqueness tag) for duplicate tests
     private String rawEmailOverride;
     private String lastUsedEmail;
     private String lastUsedPassword;
-
     private String lastJwt;
     private static final Logger LOG = LogManager.getLogger(RegisterSteps.class);
     private java.util.List<String> capturedFocusOrder;
@@ -36,12 +33,11 @@ public class RegisterSteps {
     private String uniqueEmail(String raw) {
         if (raw == null) return null;
         String trimmed = raw.trim();
-        if (trimmed.isBlank()) return trimmed; // blank stays blank
+        if (trimmed.isBlank()) return trimmed;
         int at = trimmed.indexOf('@');
-        // If malformed OR we want to preserve original for whitespace trimming scenario -> no timestamp suffix
         boolean hadSurroundingSpaces = !raw.equals(trimmed);
         if (rawEmailOverride != null || hadSurroundingSpaces) {
-            return trimmed; // preserve exact trimmed version (used for duplicate or trimming test)
+            return trimmed;
         }
         if (at < 1 || at == trimmed.length() - 1) {
             return trimmed + "+" + LocalDateTime.now().format(EMAIL_TS_FMT); // still tag malformed
@@ -51,7 +47,6 @@ public class RegisterSteps {
         String stamp = LocalDateTime.now().format(EMAIL_TS_FMT);
         return local + "+" + stamp + "@" + domain;
     }
-    // Always generate a timestamped variant, ignoring overrides or surrounding space conditions.
     private String forceTimestampEmail(String raw) {
         if (raw == null) return null;
         String trimmed = raw.trim();
@@ -59,7 +54,7 @@ public class RegisterSteps {
         int at = trimmed.indexOf('@');
         String stamp = LocalDateTime.now().format(EMAIL_TS_FMT);
         if (at < 1 || at == trimmed.length() - 1) {
-            return trimmed + "+" + stamp; // malformed gets simple suffix
+            return trimmed + "+" + stamp;
         }
         String local = trimmed.substring(0, at);
         String domain = trimmed.substring(at + 1);
@@ -108,13 +103,11 @@ public class RegisterSteps {
             driver = DriverFactory.getInstance().getDriver();
             registerPage = new RegisterPage().load();
         }
-        // Populate fields (do not submit yet)
         setFirstName(first);
         setLastName(last);
         setEmail(email);
         setPassword(password);
         lastUsedPassword = password;
-        // Capture existing console logs via WebDriver log interface if available
         try {
             initialConsoleLogs = new java.util.ArrayList<>();
             java.util.Set<String> logTypes = driver.manage().logs().getAvailableLogTypes();
@@ -187,8 +180,6 @@ public class RegisterSteps {
                 .email(email)
                 .password("Str0ng@123")
                 .submit();
-        // After successful registration app may redirect; ignore errors if already taken
-        // Navigate back to register page to start duplicate attempt
         registerPage.load();
     }
 
