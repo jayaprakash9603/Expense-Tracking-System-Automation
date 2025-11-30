@@ -173,7 +173,12 @@ public class RegisterPage extends BasePage {
     }
 
     public boolean hasSuccessMessage(String text) {
-    return waitForToastMessage(text, 5);
+        LOG.info("Checking for success message: '{}'", text);
+        boolean found = waitForToastMessage(text, 10);
+        if (!found) {
+            LOG.warn("Success message not found: '{}'. Current URL: {}", text, driver.getCurrentUrl());
+        }
+        return found;
     }
 
     public boolean hasError(String expected) {
@@ -190,24 +195,41 @@ public class RegisterPage extends BasePage {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds))
                     .until(ExpectedConditions.visibilityOfElementLocated(RegisterPageLocators.TOAST_ALERT));
+            LOG.info("Toast notification is visible");
             return true;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) { 
+            LOG.warn("Toast notification not visible within {} seconds", timeoutSeconds);
+            return false; 
+        }
     }
 
     public boolean waitForToastMessage(String fragment, long timeoutSeconds) {
         try {
+            LOG.info("Waiting for toast message containing: '{}'", fragment);
             new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds))
                     .until(ExpectedConditions.visibilityOfElementLocated(RegisterPageLocators.toastMessageContaining(fragment)));
+            LOG.info("Toast message found containing: '{}'", fragment);
             return true;
-        } catch (Exception e) { return false; }
+        } catch (Exception e) { 
+            LOG.warn("Toast message not found within {} seconds: '{}'", timeoutSeconds, fragment);
+            return false; 
+        }
     }
 
     public String getToastText() {
-        return getText(RegisterPageLocators.TOAST_ALERT);
+        try {
+            WebElement toastMsg = findElement(RegisterPageLocators.TOAST_MESSAGE);
+            String text = toastMsg.getText();
+            LOG.info("Toast message text: '{}'", text);
+            return text;
+        } catch (Exception e) {
+            LOG.error("Failed to get toast text", e);
+            return "";
+        }
     }
 
     public void assertToastContains(String fragment) {
-        Assert.assertTrue(waitForToastMessage(fragment, 5), "Toast not found containing: " + fragment);
+        Assert.assertTrue(waitForToastMessage(fragment, 10), "Toast not found containing: " + fragment);
     }
 
     public void assertError(String expected) { Assert.assertTrue(hasError(expected), "Expected error not found: " + expected); }

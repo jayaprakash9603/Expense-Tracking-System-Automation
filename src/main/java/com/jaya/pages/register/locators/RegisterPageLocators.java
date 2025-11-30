@@ -36,9 +36,12 @@ public final class RegisterPageLocators {
     public static final By ERROR_ALERT = By.xpath("//div[@role='alert' and (contains(@class,'Error') or contains(@class,'error') or contains(.,'required'))]");
     public static final By ERROR_MESSAGES  = By.xpath("//*[(@role='alert' and not(contains(.,'Registration successful'))) or contains(@class,'error') or contains(@class,'invalid')]");
 
-    public static final By TOAST_ALERT = By.xpath("//div[contains(@class,'MuiSnackbar-root')]//div[@role='alert']");
+    // Updated robust toast locators for custom ToastNotification component
+    public static final By TOAST_ALERT = By.xpath("//div[contains(@class,'MuiSnackbar-root') and not(contains(@style,'visibility: hidden'))]");
+    public static final By TOAST_MESSAGE = By.xpath("//div[contains(@class,'MuiSnackbar-root') and not(contains(@style,'visibility: hidden'))]//p[contains(@class,'MuiTypography-body1')]");
+    
     public static By toastMessageContaining(String fragment) {
-        return By.xpath("//div[contains(@class,'MuiSnackbar-root')]//div[@role='alert'][contains(.,'" + fragment + "')]");
+        return By.xpath("//div[contains(@class,'MuiSnackbar-root') and not(contains(@style,'visibility: hidden'))]//p[contains(@class,'MuiTypography-body1') and contains(normalize-space(text()),'" + fragment + "')]");
     }
 
     // Dynamic message helpers
